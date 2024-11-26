@@ -1,7 +1,7 @@
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 import os
+
+import numpy as np
+import pandas as pd
 from kagglehub import dataset_download
 
 
@@ -417,7 +417,6 @@ def main_menu():
 
 import tkinter as tk
 from tkinter import messagebox
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 
 
