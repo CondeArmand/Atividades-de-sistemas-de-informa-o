@@ -158,111 +158,6 @@ def analyze_drivers():
     plt.grid(axis='y')
     plt.show()
 
-def best_drivers_analysis():
-    """
-    Determina os melhores pilotos entre 2022 e 2024 com base em métricas de desempenho.
-    """
-    print("\nAnálise dos Melhores Pilotos (2022-2024)")
-
-    try:
-        dataframes = DataLoader.get_dataframes()
-        print("DataFrames disponíveis:", list(dataframes.keys()))  # Debug
-    except ValueError as e:
-        print(e)
-        return
-
-    drivers = dataframes.get("drivers")
-    races = dataframes.get("races")
-    results = dataframes.get("results")
-
-    if drivers is None or results is None or races is None:
-        print("Erro: Faltando um ou mais arquivos necessários para a análise.")
-        return
-
-    # Relacionar 'results' com 'races' para obter o ano
-    results_with_year = results.merge(races[['raceId', 'year']], on='raceId')
-
-    # Filtrar para os anos recentes (2022-2024)
-    recent_years = results_with_year.query("2022 <= year <= 2024")
-
-    # Converter os dados para NumPy arrays
-    driver_ids = recent_years['driverId'].values
-    race_ids = recent_years['raceId'].values
-    points = recent_years['points'].values
-    positions = recent_years['positionOrder'].values
-
-    # Usar NumPy para métricas básicas
-    unique_drivers = np.unique(driver_ids)
-
-    metrics = {}
-    for driver in unique_drivers:
-        driver_points = points[driver_ids == driver]
-        driver_positions = positions[driver_ids == driver]
-        driver_race_ids = race_ids[driver_ids == driver]
-
-        # Total de pontos
-        total_points = np.sum(driver_points)
-
-        # Número de vitórias
-        total_wins = np.sum(driver_positions == 1)
-
-        # Número de corridas disputadas
-        total_races = len(driver_points)
-
-        # Taxa de vitórias
-        win_rate = (total_wins / total_races) * 100 if total_races > 0 else 0
-
-        # Média de pontos por corrida
-        avg_points_per_race = total_points / total_races if total_races > 0 else 0
-
-        # Melhor posição alcançada
-        best_position = np.min(driver_positions)
-
-        # Índice de desempenho ponderado
-        performance_score = (
-            (total_points * 0.5) +  # Peso maior para pontos totais
-            (total_wins * 30) +    # Vitórias impactam significativamente
-            (avg_points_per_race * 10) +  # Consistência é valorizada
-            ((1 / best_position) * 100)  # Melhores posições têm peso menor
-        )
-
-        metrics[driver] = {
-            'Pontos Totais': total_points,
-            'Vitórias Totais': total_wins,
-            'Corridas Disputadas': total_races,
-            'Taxa de Vitórias (%)': win_rate,
-            'Média de Pontos por Corrida': avg_points_per_race,
-            'Melhor Posição': best_position,
-            'Índice de Desempenho': performance_score
-        }
-
-    # Ordenar os pilotos por índice de desempenho
-    metrics_sorted = sorted(metrics.items(), key=lambda x: x[1]['Índice de Desempenho'], reverse=True)
-
-    # Criar DataFrame para exibição
-    rows = []
-    for driver, data in metrics_sorted:
-        driver_name = drivers.set_index('driverId').loc[driver, 'surname']
-        rows.append({
-            'Piloto': driver_name,
-            **data
-        })
-    metrics_df = pd.DataFrame(rows)
-
-    # Exibir DataFrame
-    print("\nMelhores Pilotos (2022-2024):")
-    print(metrics_df)
-
-    # Gráfico: Índice de Desempenho
-    plt.figure(figsize=(12, 6))
-    plt.bar(metrics_df["Piloto"], metrics_df["Índice de Desempenho"], color="purple", alpha=0.7)
-    plt.title("Melhores Pilotos por Índice de Desempenho (2022-2024)")
-    plt.xlabel("Pilotos")
-    plt.ylabel("Índice de Desempenho")
-    plt.xticks(rotation=45)
-    plt.grid(axis='y')
-    plt.show()
-
 def analyze_teams():
     """
     Realiza análise de desempenho por equipe (2022-2024).
@@ -511,11 +406,9 @@ def main_menu():
         if choice == "1":
             analyze_drivers()
         elif choice == "2":
-            best_drivers_analysis()
+            enhanced_best_drivers_analysis()
         elif choice == "3":
             analyze_teams()
-        elif choice == "4":
-            enhanced_best_drivers_analysis()
         elif choice == "0":
             print("Saindo do programa...")
             break
