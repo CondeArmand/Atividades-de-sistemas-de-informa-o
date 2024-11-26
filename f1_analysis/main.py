@@ -389,32 +389,6 @@ def enhanced_best_drivers_analysis():
         plt.grid(axis='y')
         plt.show()
 
-
-def main_menu():
-    """
-    Menu principal para selecionar as análises.
-    """
-    print("\nF1 Analysis Menu")
-    print("1. Análise de Pilotos")
-    print("2. Análise de Melhores Pilotos")
-    print("3. Análise de Equipes")
-    print("4. Análise Avançada de Melhores Pilotos")
-    print("0. Sair")
-
-    while True:
-        choice = input("\nEscolha uma opção: ")
-        if choice == "1":
-            analyze_drivers()
-        elif choice == "2":
-            enhanced_best_drivers_analysis()
-        elif choice == "3":
-            analyze_teams()
-        elif choice == "0":
-            print("Saindo do programa...")
-            break
-        else:
-            print("Opção inválida. Tente novamente.")
-
 import tkinter as tk
 from tkinter import messagebox
 import matplotlib.pyplot as plt
