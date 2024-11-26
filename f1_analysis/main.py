@@ -415,9 +415,75 @@ def main_menu():
         else:
             print("Opção inválida. Tente novamente.")
 
+import tkinter as tk
+from tkinter import messagebox
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
+
+
+class F1AnalysisApp:
+    def __init__(self, root):
+        """
+        Inicializa a interface gráfica principal.
+        """
+        self.root = root
+        self.root.title("F1 Analysis Dashboard")
+        self.root.geometry("400x300")
+
+        # Título da aplicação
+        title = tk.Label(root, text="F1 Analysis Dashboard", font=("Arial", 16))
+        title.pack(pady=20)
+
+        # Botões para análises
+        btn_drivers = tk.Button(root, text="Análise de Pilotos", command=self.analyze_drivers)
+        btn_drivers.pack(pady=5)
+
+        btn_teams = tk.Button(root, text="Análise de Equipes", command=self.analyze_teams)
+        btn_teams.pack(pady=5)
+
+        btn_advanced = tk.Button(root, text="Análise Avançada de Pilotos", command=self.enhanced_analysis)
+        btn_advanced.pack(pady=5)
+
+        btn_exit = tk.Button(root, text="Sair", command=self.root.quit)
+        btn_exit.pack(pady=20)
+
+    def analyze_drivers(self):
+        """
+        Chama a análise de pilotos e exibe os resultados.
+        """
+        try:
+            analyze_drivers()  # Função já definida no código original
+            messagebox.showinfo("Sucesso", "Análise de Pilotos concluída!")
+        except Exception as e:
+            messagebox.showerror("Erro", f"Erro ao realizar a análise de pilotos:\n{e}")
+
+    def analyze_teams(self):
+        """
+        Chama a análise de equipes e exibe os resultados.
+        """
+        try:
+            analyze_teams()  # Função já definida no código original
+            messagebox.showinfo("Sucesso", "Análise de Equipes concluída!")
+        except Exception as e:
+            messagebox.showerror("Erro", f"Erro ao realizar a análise de equipes:\n{e}")
+
+    def enhanced_analysis(self):
+        """
+        Chama a análise avançada de pilotos e exibe os resultados.
+        """
+        try:
+            enhanced_best_drivers_analysis()  # Função já definida no código original
+            messagebox.showinfo("Sucesso", "Análise Avançada concluída!")
+        except Exception as e:
+            messagebox.showerror("Erro", f"Erro ao realizar a análise avançada:\n{e}")
+
 
 if __name__ == "__main__":
-    print("Iniciando o carregamento dos dados...")
-    DataLoader.load_data()  # Carregar os dados
-    print("Dados carregados com sucesso.")
-    main_menu()
+    # Carregar os dados primeiro
+    print("Carregando dados...")
+    DataLoader.load_data()
+
+    # Inicializar a aplicação Tkinter
+    root = tk.Tk()
+    app = F1AnalysisApp(root)
+    root.mainloop()
